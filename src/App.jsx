@@ -390,6 +390,21 @@ export default function App() {
     return () => window.clearTimeout(timeoutId);
   }, [game.feedback]);
 
+  useEffect(() => {
+    const setAppHeight = () => {
+      document.documentElement.style.setProperty("--app-height", window.innerHeight + "px");
+    };
+
+    setAppHeight();
+    window.addEventListener("resize", setAppHeight);
+    window.addEventListener("orientationchange", setAppHeight);
+
+    return () => {
+      window.removeEventListener("resize", setAppHeight);
+      window.removeEventListener("orientationchange", setAppHeight);
+    };
+  }, []);
+
   function dealRound() {
     if (game.roundActive) {
       return;
@@ -548,13 +563,14 @@ export default function App() {
 
   return (
     <div
-      className={`px-2 py-2 text-[#e8efe9] sm:px-4 sm:py-4 lg:px-6 ${game.chartOpen ? "min-h-screen" : "h-[100dvh] overflow-hidden"}`}
+      className="min-h-screen px-2 py-2 text-[#e8efe9] sm:px-4 sm:py-4 lg:px-6"
+      style={{ minHeight: "var(--app-height)" }}
     >
       <AnimatePresence>
         {resultFlash && <ResultFlash key={resultFlash.id} tone={resultFlash.tone} />}
       </AnimatePresence>
 
-      <div className={`mx-auto flex max-w-[1180px] flex-col gap-2.5 sm:gap-4 ${game.chartOpen ? "" : "h-full"}`}>
+      <div className="mx-auto flex max-w-[1180px] min-h-full flex-col gap-2.5 sm:gap-4">
         <header className="rounded-[1.2rem] border border-white/8 bg-white/[0.035] px-3 py-2.5 shadow-[0_14px_32px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:px-4 sm:py-3">
           <div className="flex flex-col gap-2">
             <div>
@@ -574,12 +590,12 @@ export default function App() {
         </header>
 
         <section
-          className={`relative overflow-hidden rounded-[1.6rem] border border-emerald-500/18 bg-[#061411] p-2.5 shadow-[0_24px_70px_rgba(0,0,0,0.34)] sm:p-4 lg:p-5 ${game.chartOpen ? "" : "flex-1 min-h-0"}`}
+          className="relative overflow-hidden rounded-[1.6rem] border border-emerald-500/18 bg-[#061411] p-2.5 shadow-[0_24px_70px_rgba(0,0,0,0.34)] flex-1 min-h-0 sm:p-4 lg:p-5"
         >
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(9,31,24,0.92),rgba(6,20,17,0.96))]" />
           <div className="pointer-events-none absolute inset-2 rounded-[1.35rem] border border-emerald-400/10 sm:inset-3 sm:rounded-[1.5rem]" />
 
-          <div className={`relative mx-auto flex max-w-[760px] flex-col gap-3 sm:max-w-3xl sm:gap-5 ${game.chartOpen ? "" : "h-full justify-center"}`}>
+          <div className="relative mx-auto flex h-full max-w-[760px] flex-col justify-center gap-3 sm:max-w-3xl sm:gap-5">
             <TableLane
               label="Dealer"
               total={dealerSummary ? String(game.dealerRevealed ? dealerSummary.total : dealerUpcardValue(dealerUpcard)) : "?"}
