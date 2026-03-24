@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "framer-motion": "^12.7.4",
+    "gh": "^2.8.9",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
